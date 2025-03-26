@@ -4,6 +4,7 @@ import Home from "./pages/Home";
 import Topics from "./pages/Topics";
 import Brands from "./pages/Brands";
 import Blogs from "./pages/Blogs";
+import AddConnection from "./pages/AddConnection"; // Import the new page
 
 function App() {
   return (
@@ -14,8 +15,9 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/topics" element={<Topics />} />
           <Route path="/blogs" element={<Blogs />} />
-          <Route path="/brands" element={<Brands />} /> {/* Brands List Page */}
-          <Route path="/brands/:brandId" element={<Topics />} /> {/* Topics for a Brand */}
+          <Route path="/brands" element={<Brands />} />
+          <Route path="/brands/:brandId" element={<Topics />} />
+          <Route path="/add-connection" element={<AddConnection />} /> {/* New Route */}
         </Routes>
       </div>
     </Router>
@@ -23,4 +25,5 @@ function App() {
 }
 
 export default App;
+
 

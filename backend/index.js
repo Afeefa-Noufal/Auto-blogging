@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
+import connectionRoutes from "./routes/connectionRoutes.js";
 import brandRoutes from "./routes/brandRoutes.js";
 import blogRoutes from "./routes/blogRoutes.js";
 import topicRoutes from "./routes/topicRoutes.js"; // New route for topics
@@ -25,6 +26,7 @@ app.use("/api", imageRoutes);  // Ensure it matches frontend API calls
 
 
 // Routes
+app.use("/api/connections", connectionRoutes);
 app.use("/api/brands", brandRoutes);
 app.use("/api/blogs", blogRoutes);
 app.use("/api/topics", topicRoutes); // New route for managing topics
@@ -43,4 +45,3 @@ mongoose
     console.error("❌ MongoDB Connection Error:", error);
     process.exit(1); // Exit process if DB connection fails
   });
-

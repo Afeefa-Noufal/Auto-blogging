@@ -55,4 +55,3 @@ cron.schedule("*/2 * * * *", async () => {
   console.log("⏳ Running scheduled blog upload...");
   await autoGenerateBlog();
 });
-

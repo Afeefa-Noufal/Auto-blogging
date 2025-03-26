@@ -1,0 +1,134 @@
+/* General Container */
+.container {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Titles */
+  .title {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  .sub-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 30px;
+  }
+  
+  /* Alerts */
+  .alert {
+    text-align: center;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+  }
+  
+  .alert-success {
+    background: #d4edda;
+    color: #155724;
+  }
+  
+  .alert-error {
+    background: #f8d7da;
+    color: #721c24;
+  }
+  
+  /* Form Inputs */
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .input {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  
+  .input:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  }
+  
+  /* Button */
+  .button {
+    background: #007bff;
+    color: white;
+    font-size: 16px;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  
+  .button:hover {
+    background: #0056b3;
+  }
+  
+  /* Connections List */
+  .connection-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 10px;
+  }
+  
+  .connection-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f9f9f9;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Platform and URL */
+  .platform {
+    font-weight: bold;
+  }
+  
+  .site-url {
+    color: #555;
+  }
+  
+  /* Status Badge */
+  .status {
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: bold;
+  }
+  
+  .active {
+    background: #28a745;
+    color: white;
+  }
+  
+  .inactive {
+    background: #dc3545;
+    color: white;
+  }
+  
+  /* Loading Message */
+  .loading {
+    text-align: center;
+    color: #666;
+  }
+  
+  .no-connections {
+    text-align: center;
+    color: #888;
+  }
+  

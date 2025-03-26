@@ -28,4 +28,3 @@ export const generateDetailedReview = async (topic) => {
     return "Error generating review.";
   }
 };
-

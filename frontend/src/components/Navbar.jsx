@@ -9,10 +9,12 @@ const Navbar = () => {
         <Link to="/" className="nav-link">Home</Link>
         <Link to="/brands" className="nav-link">Brands</Link>
         <Link to="/blogs" className="nav-link">Blogs</Link>
+        <Link to="/add-connection" className="nav-link">Add Connection</Link>
       </div>
     </nav>
   );
 };
 
 export default Navbar;
+
 
