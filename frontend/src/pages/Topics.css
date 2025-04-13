@@ -1,71 +1,141 @@
+/* Main Container */
 .topics-container {
-    padding: 20px;
-    max-width: 800px;
-    margin: auto;
-  }
+  width: 80%;
+  margin: auto;
+  text-align: center;
+}
+
+/* Form Styling */
+.topics-form {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.topics-form input,
+.topics-form select {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.topics-form button {
+  background-color: #007bff;
+  color: white;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.topics-form button:hover {
+  background-color: #0056b3;
+}
+
+/* Table Styling */
+.topics-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.topics-table th, 
+.topics-table td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: center;
+}
+
+/* Updated Table Header */
+.topics-table th {
+  color:black;
+  font-weight: bold;
+  text-align: center;
+  padding: 14px;
+}
+
+/* Fix for Action Column */
+.topics-table td:last-child,
+.topics-table th:last-child {
+  min-width: 150px;  /* Ensures same size as other columns */
+  text-align: center;
+}
+
+/* Topic Image Styling */
+.topic-image {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.edit-btn, .delete-btn {
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: bold;
+  text-transform: uppercase;
+  transition: all 0.3s ease-in-out;
+  border: none;
+}
+
+/* Edit Button */
+.edit-btn {
+  background-color: #3498db;
+  color: white;
+}
+
+.edit-btn:hover {
+  background-color: #1f78c1;
+  transform: scale(1.05);
+}
+
+/* Delete Button */
+.delete-btn {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.delete-btn:hover {
+  background-color: #c0392b;
+  transform: scale(1.05);
+}
+
+/* Cancel Edit Button */
+.cancel-edit {
+  background-color: #95a5a6;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  border: none;
+}
+
+.cancel-edit:hover {
+  background-color: #7f8c8d;
+  transform: scale(1.05);
+}
+
+/* Error Message */
+.error-message {
+  color: red;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+
   
-  h2 {
-    color: #333;
-    text-align: center;
-  }
-  
-  p {
-    text-align: center;
-  }
-  
-  .error-message {
-    color: red;
-    font-weight: bold;
-  }
-  
-  .topics-form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    max-width: 400px;
-    margin: auto;
-  }
-  
-  .topics-form input,
-  .topics-form select,
-  .topics-form button {
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-  }
-  
-  .topics-form button {
-    background-color: #007bff;
-    color: white;
-    cursor: pointer;
-  }
-  
-  .topics-form button:hover {
-    background-color: #0056b3;
-  }
-  
-  .topics-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-  }
-  
-  .topics-table th,
-  .topics-table td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: center;
-  }
-  
-  .topics-table th {
-    background-color: #007bff;
-    color: white;
-  }
-  
-  .topic-image {
-    width: 50px;
-    height: 50px;
-    object-fit: cover;
-    border-radius: 5px;
-  }
   

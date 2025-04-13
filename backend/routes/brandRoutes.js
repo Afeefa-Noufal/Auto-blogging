@@ -16,3 +16,4 @@ router.put("/:id", updateBrand); // Update brand details
 router.delete("/:id", deleteBrand); // Delete a brand
 
 export default router;
+

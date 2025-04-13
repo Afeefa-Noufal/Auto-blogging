@@ -3,7 +3,13 @@ import Connection from "../models/Connection.js";
 // Add a new connection
 export const addConnection = async (req, res) => {
   try {
+    console.log("🔹 Incoming request:", req.body);
+
     const { platform, siteUrl, consumerKey, consumerSecret, isActive } = req.body;
+
+    if (!siteUrl || !consumerKey || !consumerSecret) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
 
     const connection = new Connection({
       platform,
@@ -16,9 +22,13 @@ export const addConnection = async (req, res) => {
     await connection.save();
     res.status(201).json({ message: "Connection added successfully", connection });
   } catch (error) {
+    console.error("❌ Error saving connection:", error);
     res.status(500).json({ error: "Failed to add connection" });
   }
 };
+
+
+
 
 // Get all connections
 export const getConnections = async (req, res) => {

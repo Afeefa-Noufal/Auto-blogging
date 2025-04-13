@@ -19,8 +19,6 @@ export const createTopic = async (req, res) => {
   }
 };
 
-
-
 // Get all topics
 export const getTopics = async (req, res) => {
   try {
@@ -40,22 +38,25 @@ export const getTopicsByBrand = async (req, res) => {
   }
 
   try {
-    const topics = await Topic.find({ brandId });
+    const topics = await Topic.find({ brandId }).populate("brandId", "name description");
     res.json(topics);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
-// Update a topic
+// Update a topic (Partial Update Supported)
 export const updateTopic = async (req, res) => {
   try {
     const { title, brandId, status, imageUrl } = req.body;
-    const updatedTopic = await Topic.findByIdAndUpdate(
-      req.params.id,
-      { title, brandId, status, imageUrl },
-      { new: true }
-    );
+
+    const updatedFields = {};
+    if (title) updatedFields.title = title;
+    if (brandId) updatedFields.brandId = brandId;
+    if (status) updatedFields.status = status;
+    if (imageUrl) updatedFields.imageUrl = imageUrl;
+
+    const updatedTopic = await Topic.findByIdAndUpdate(req.params.id, updatedFields, { new: true });
 
     if (!updatedTopic) {
       return res.status(404).json({ error: "Topic not found" });
@@ -67,89 +68,18 @@ export const updateTopic = async (req, res) => {
   }
 };
 
-// Delete a topic
+// Delete a topic (Enhanced Error Handling)
 export const deleteTopic = async (req, res) => {
   try {
-    const deletedTopic = await Topic.findByIdAndDelete(req.params.id);
+    const topic = await Topic.findById(req.params.id);
 
-    if (!deletedTopic) {
+    if (!topic) {
       return res.status(404).json({ error: "Topic not found" });
     }
 
-    res.json({ message: "Topic deleted successfully" });
+    await topic.deleteOne();
+    res.json({ message: "Topic deleted successfully", deletedTopic: topic });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
-
-
-
-
-// import Topic from "../models/Topic.js";
-
-// // Add a new topic
-// export const createTopic = async (req, res) => {
-//   try {
-//     const { title, status, scheduled, image } = req.body;
-
-//     // Check if topic already exists
-//     const existingTopic = await Topic.findOne({ title });
-//     if (existingTopic) {
-//       return res.status(400).json({ message: "Topic already exists" });
-//     }
-
-//     const newTopic = new Topic({ title, status, scheduled, image });
-//     await newTopic.save();
-
-//     res.status(201).json(newTopic);
-//   } catch (error) {
-//     console.error("Error creating topic:", error);
-//     res.status(500).json({ message: "Internal server error" });
-//   }
-// };
-
-// // Get all topics
-// export const getTopics = async (req, res) => {
-//   try {
-//     const topics = await Topic.find();
-//     res.json(topics);
-//   } catch (error) {
-//     console.error("Error fetching topics:", error);
-//     res.status(500).json({ message: "Internal server error" });
-//   }
-// };
-
-// // Update topic status/scheduling
-// export const updateTopic = async (req, res) => {
-//   try {
-//     const { id } = req.params;
-//     const { status, scheduled, image } = req.body;
-
-//     const updatedTopic = await Topic.findByIdAndUpdate(
-//       id,
-//       { status, scheduled, image },
-//       { new: true }
-//     );
-
-//     if (!updatedTopic) {
-//       return res.status(404).json({ message: "Topic not found" });
-//     }
-
-//     res.json(updatedTopic);
-//   } catch (error) {
-//     console.error("Error updating topic:", error);
-//     res.status(500).json({ message: "Internal server error" });
-//   }
-// };
-
-// // Delete a topic
-// export const deleteTopic = async (req, res) => {
-//   try {
-//     const { id } = req.params;
-//     await Topic.findByIdAndDelete(id);
-//     res.json({ message: "Topic deleted successfully" });
-//   } catch (error) {
-//     console.error("Error deleting topic:", error);
-//     res.status(500).json({ message: "Internal server error" });
-//   }
-// };

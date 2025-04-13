@@ -12,6 +12,8 @@ const Blogs = () => {
         const response = await fetch("http://localhost:5000/api/blogs");
         const data = await response.json();
         setBlogs(data);
+        console.log(data);
+        
       } catch (error) {
         console.error("Error fetching blogs:", error);
       }

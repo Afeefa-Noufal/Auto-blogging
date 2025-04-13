@@ -7,7 +7,11 @@ const topicSchema = new mongoose.Schema({
     enum: ["active", "scheduled", "completed"], // Add "completed" here
     default: "active",
   },
-  brandId: { type: mongoose.Schema.Types.ObjectId, ref: "Brand", required: true },
+  brandId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Brand",
+    required: true,
+  },
   imageUrl: String,
 });
 
