@@ -45,34 +45,36 @@ const AddConnection = () => {
       const response = await axios.get("http://localhost:5000/api/blogs");
       console.log("Received blogs:", response.data);
       setBlogs(response.data);
+      setBlogs(response.data.filter(blog => !blog.isPublished));
     } catch (error) {
       console.error("Error fetching blogs:", error);
     }
   };
 
   // Publish blog
-  const publishToWooCommerce = async () => {
-    if (!selectedBlogId) {
-      alert("Please select a blog to publish.");
-      return;
-    }
+ const publishToWooCommerce = async () => {
+  if (!selectedBlogId) {
+    alert("Please select a blog to publish.");
+    return;
+  }
 
-    try {
-      console.log(`Publishing blog ID: ${selectedBlogId}`);
-      await axios.post(`http://localhost:5000/api/blogs/${selectedBlogId}/publish`);
-      alert("Blog posted to WooCommerce successfully!");
-    } catch (error) {
-      console.error("Error publishing blog:", error);
-      if (error.response) {
-        console.error("Response error:", error.response);
-      } else if (error.request) {
-        console.error("Request error:", error.request);
-      } else {
-        console.error("Error message:", error.message);
-      }
+  try {
+    console.log(`Publishing blog ID: ${selectedBlogId}`);
+    await axios.post(`http://localhost:5000/api/blogs/${selectedBlogId}/publish`);
+    alert("Blog posted to WooCommerce successfully!");
+  } catch (error) {
+    console.error("Error publishing blog:", error);
+
+    // ✅ Show backend error message in alert if available
+    if (error.response && error.response.data && error.response.data.message) {
+      alert(error.response.data.message);
+    } else if (error.request) {
+      alert("No response from server. Please check your connection.");
+    } else {
       alert("Failed to post blog to WooCommerce");
     }
-  };
+  }
+};
 
   // Handle form input
   const handleChange = (e) => {

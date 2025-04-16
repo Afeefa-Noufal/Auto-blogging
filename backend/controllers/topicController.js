@@ -5,19 +5,27 @@ export const createTopic = async (req, res) => {
   try {
     console.log("Received data:", req.body); // Debugging log
 
-    const { title, status, imageUrl, brandId } = req.body;
+    const { title, status, imageUrl, brandId, scheduleTime } = req.body; // ✅ include scheduleTime
 
     if (!brandId) {
       return res.status(400).json({ error: "brandId is required" });
     }
 
-    const newTopic = new Topic({ title, status, imageUrl, brandId });
+    const newTopic = new Topic({
+      title,
+      status,
+      imageUrl,
+      brandId,
+      scheduleTime, // ✅ save it
+    });
+
     await newTopic.save();
     res.status(201).json(newTopic);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
+
 
 // Get all topics
 export const getTopics = async (req, res) => {
