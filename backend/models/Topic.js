@@ -7,8 +7,15 @@ const topicSchema = new mongoose.Schema({
   used: { type: Boolean, default: false },
   imageUrl: String,
   scheduleTime: { type: Date },
+  platforms: [{
+    platform: { type: String, enum: ["WooCommerce", "Shopify", "Medium", "WordPress"] },
+    connectionId: { type: mongoose.Schema.Types.ObjectId, ref: "Connection", required: true }
+  }]
 });
 
 export default mongoose.model("Topic", topicSchema);
+
+
+
 
 

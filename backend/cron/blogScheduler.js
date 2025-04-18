@@ -61,53 +61,63 @@ const publishScheduledBlogs = async () => {
   try {
     const now = new Date();
     const blogsToPublish = await Blog.find({
-      isPublished: false, // Only unpublished blogs
-      scheduledAt: { $lte: now }, // Blog scheduled at or before current time
+      isPublished: false,
+      scheduledAt: { $lte: now },
     });
 
-
-    // if (blogsToPublish.length === 0) {
-    //   console.log("⏳ No blogs to publish at this time.");
-    //   return;
-    // }
     if (blogsToPublish.length === 0) {
       console.log("⏳ No blogs to publish at this time.");
     } else {
       console.log(`📌 Found ${blogsToPublish.length} blog(s) to publish:`);
       blogsToPublish.forEach((blog) => console.log(`   • ${blog.title}`));
     }
-    
 
     for (const blog of blogsToPublish) {
-      const connections = await Connection.find({
-        brandId: blog.brand,
-        platform: "WooCommerce",
-        isActive: true,
-      });
+      try {
+        const topic = await Topic.findById(blog.topic);
 
-      let posted = false;
-
-      for (const conn of connections) {
-        try {
-          await postToWooCommerce(conn, blog);
-          console.log(`🚀 Blog posted: ${blog.title} to ${conn.siteUrl}`);
-          posted = true;
-        } catch (err) {
-          console.error(`❌ Failed posting to ${conn.siteUrl}:`, err.message);
+        if (!topic) {
+          console.warn(`⚠️ Topic not found for blog "${blog.title}"`);
+          continue;
         }
-      }
 
-      // Mark as published if successfully posted
-      if (posted) {
-        blog.isPublished = true;
-        blog.publishedAt = new Date();
-        await blog.save();
+        const platforms = topic.platforms || []; // ✅ this is the correct line
+
+        let posted = false;
+
+        for (const platform of platforms) {
+          if (platform.platform === "WooCommerce" && platform.connectionId) {
+            const connection = await Connection.findById(platform.connectionId);
+
+            if (connection && connection.isActive) {
+              try {
+                await postToWooCommerce(connection, blog);
+                console.log(`🚀 Blog posted: ${blog.title} to ${connection.siteUrl}`);
+                posted = true;
+              } catch (err) {
+                console.error(`❌ Failed to post to ${connection.siteUrl}:`, err.message);
+              }
+            } else {
+              console.warn(`⚠️ Inactive or missing connection for WooCommerce in topic "${topic.title}"`);
+            }
+          }
+        }
+
+        if (posted) {
+          blog.isPublished = true;
+          blog.publishedAt = new Date();
+          await blog.save();
+        }
+      } catch (err) {
+        console.error(`❌ Error processing blog "${blog.title}":`, err.message);
       }
     }
   } catch (err) {
-    console.error("❌ Error in publishing scheduled blogs:", err);
+    console.error("❌ Error in publishing scheduled blogs:", err.message);
   }
 };
+
+
 
 // Schedule this to run every minute
 cron.schedule("* * * * *", async () => {

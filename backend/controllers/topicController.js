@@ -1,14 +1,43 @@
 import Topic from "../models/Topic.js";
+import Connection from "../models/Connection.js";
 
-// Create a new topic
 export const createTopic = async (req, res) => {
   try {
-    console.log("Received data:", req.body); // Debugging log
+    console.log("Received data:", req.body);
 
-    const { title, status, imageUrl, brandId, scheduleTime } = req.body; // ✅ include scheduleTime
+    const { title, status, imageUrl, brandId, scheduleTime, platforms } = req.body;
 
     if (!brandId) {
       return res.status(400).json({ error: "brandId is required" });
+    }
+
+    if (!Array.isArray(platforms)) {
+      return res.status(400).json({ error: "Platforms must be an array" });
+    }
+
+    const platformConnections = [];
+
+    for (const platformName of platforms) {
+      const platformNormalized = platformName.toLowerCase();
+
+      // Remove brandId filter since your connections are shared
+      const connection = await Connection.findOne({
+        platform: { $regex: new RegExp(`^${platformNormalized}$`, "i") },
+        isActive: true,
+      });
+
+      if (connection) {
+        platformConnections.push({
+          platform: connection.platform, // Keep it as stored in DB
+          connectionId: connection._id,
+        });
+      } else {
+        console.warn(`⚠️ No active connection found for platform: ${platformName}`);
+      }
+    }
+
+    if (platformConnections.length === 0) {
+      return res.status(400).json({ error: "No valid active connections found for any selected platforms." });
     }
 
     const newTopic = new Topic({
@@ -16,15 +45,19 @@ export const createTopic = async (req, res) => {
       status,
       imageUrl,
       brandId,
-      scheduleTime, // ✅ save it
+      scheduleTime,
+      platforms: platformConnections,
     });
 
     await newTopic.save();
     res.status(201).json(newTopic);
   } catch (error) {
+    console.error("❌ Error saving topic:", error.message);
     res.status(500).json({ error: error.message });
   }
 };
+
+
 
 
 // Get all topics
@@ -40,13 +73,21 @@ export const getTopics = async (req, res) => {
 // Get topics by brand
 export const getTopicsByBrand = async (req, res) => {
   const { brandId } = req.params;
+  const { platform } = req.query; // Optional query parameter
 
   if (!brandId) {
     return res.status(400).json({ error: "Brand ID is required" });
   }
 
   try {
-    const topics = await Topic.find({ brandId }).populate("brandId", "name description");
+    const query = { brandId };
+
+    // Optional platform filtering (case-insensitive match)
+    if (platform) {
+      query.platforms = { $elemMatch: { platform: new RegExp(`^${platform}$`, "i") } };
+    }
+
+    const topics = await Topic.find(query).populate("brandId", "name description");
     res.json(topics);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -56,13 +97,51 @@ export const getTopicsByBrand = async (req, res) => {
 // Update a topic (Partial Update Supported)
 export const updateTopic = async (req, res) => {
   try {
-    const { title, brandId, status, imageUrl } = req.body;
+    const { title, brandId, status, imageUrl, platforms } = req.body;
 
     const updatedFields = {};
     if (title) updatedFields.title = title;
     if (brandId) updatedFields.brandId = brandId;
     if (status) updatedFields.status = status;
     if (imageUrl) updatedFields.imageUrl = imageUrl;
+
+    // If platforms are provided, process them
+    if (platforms) {
+      if (!Array.isArray(platforms)) {
+        return res.status(400).json({ error: "Platforms must be an array" });
+      }
+
+      const populatedPlatforms = [];
+
+      for (const platformName of platforms) {
+        // Normalize platform name to match case-insensitive database values
+        const platformNormalized = platformName.toLowerCase();
+
+        // Validate platform
+        if (!allowedPlatforms.includes(platformNormalized)) {
+          return res.status(400).json({ error: "Invalid platform selected" });
+        }
+
+        // Fetch connectionId for the platform and brandId (case insensitive)
+        const connection = await Connection.findOne({
+          brandId,
+          platform: { $regex: new RegExp(`^${platformNormalized}$`, "i") }, // Case-insensitive match
+          isActive: true,
+        });
+
+        if (!connection) {
+          return res.status(400).json({ error: `No active connection found for platform: ${platformName}` });
+        }
+
+        // Add the connectionId to the platform object
+        populatedPlatforms.push({
+          platform: platformName,
+          connectionId: connection._id,  // Dynamically populate connectionId
+        });
+      }
+
+      updatedFields.platforms = populatedPlatforms;
+    }
 
     const updatedTopic = await Topic.findByIdAndUpdate(req.params.id, updatedFields, { new: true });
 
@@ -91,3 +170,6 @@ export const deleteTopic = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+
+

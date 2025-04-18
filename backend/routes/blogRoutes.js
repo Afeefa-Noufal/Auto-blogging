@@ -1,7 +1,5 @@
-// backend/routes/blogRoutes.js
 import express from "express";
 import { createBlog, getAllBlogs ,  publishBlog } from "../controllers/blogController.js";
-
 
 const router = express.Router();
 

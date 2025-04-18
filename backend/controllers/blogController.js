@@ -73,9 +73,6 @@ export const createBlog = async (req, res) => {
 };
 
 
-
-
-
 // Get all blogs
 export const getAllBlogs = async (req, res) => {
   try {

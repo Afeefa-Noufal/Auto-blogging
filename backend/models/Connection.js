@@ -1,11 +1,18 @@
 import mongoose from "mongoose";
 
 const connectionSchema = new mongoose.Schema({
-  platform: { type: String, required: true }, // e.g., "WooCommerce"
-  siteUrl: { type: String, required: true }, // WooCommerce site URL
-  consumerKey: { type: String, required: true }, // API key
-  consumerSecret: { type: String, required: true }, // API secret
-  isActive: { type: Boolean, default: true }, // Enable/Disable auto-posting
+  platform: { type: String, required: true }, // e.g., "WooCommerce", "Medium"
+  siteUrl: { type: String, required: true },   // Platform base URL
+  
+  // WooCommerce REST API credentials
+  consumerKey: { type: String },
+  consumerSecret: { type: String },
+  
+  // WordPress Application Password (for posting to WP/Woo)
+  username: { type: String },
+  appPassword: { type: String },
+  
+  isActive: { type: Boolean, default: true },
   createdAt: { type: Date, default: Date.now },
 });
 

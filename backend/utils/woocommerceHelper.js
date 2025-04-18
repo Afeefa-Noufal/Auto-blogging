@@ -10,7 +10,6 @@ export const postToWooCommerce = async (connection, blog) => {
     if (!blog.imageUrl) {
       console.warn("⚠ No image URL found in blog");
     }
-
  
     if (blog.imageUrl) {
       imageId = await uploadImageToWooCommerce(connection, blog.imageUrl);
@@ -29,11 +28,12 @@ export const postToWooCommerce = async (connection, blog) => {
           "Content-Type": "application/json",
         },
         auth: {
-          username: connection.consumerKey,
-          password: connection.consumerSecret,
+          username: connection.username,
+          password: connection.appPassword, // Instead of consumer key/secret
         },
       }
     );
+    
 
     return response.data;
   } catch (error) {

@@ -1,4 +1,3 @@
-// frontend/src/components/Loader.jsx
 const Loader = () => {
     return (
       <div style={styles.loaderContainer}>
