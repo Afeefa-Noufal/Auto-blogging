@@ -3,7 +3,7 @@ import Brand from "../models/Brand.js";
 // Create a new brand
 export const createBrand = async (req, res) => {
   try {
-    const { name, description } = req.body;
+    const { name, description, platforms } = req.body;
 
     // Check if the brand already exists
     const existingBrand = await Brand.findOne({ name });
@@ -11,7 +11,7 @@ export const createBrand = async (req, res) => {
       return res.status(400).json({ error: "Brand already exists" });
     }
 
-    const brand = new Brand({ name, description });
+    const brand = new Brand({ name, description, platforms });
     await brand.save();
     res.status(201).json(brand);
   } catch (error) {
@@ -19,22 +19,23 @@ export const createBrand = async (req, res) => {
   }
 };
 
+// Get brand by ID
 export const getBrandById = async (req, res) => {
-    try {
-      const brand = await Brand.findById(req.params.id);
-      if (!brand) {
-        return res.status(404).json({ error: "Brand not found" });
-      }
-      res.json(brand);
-    } catch (error) {
-      res.status(500).json({ error: "Internal Server Error" });
+  try {
+    const brand = await Brand.findById(req.params.id).populate("platforms.connectionId");
+    if (!brand) {
+      return res.status(404).json({ error: "Brand not found" });
     }
-  };
+    res.json(brand);
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
 
 // Get all brands
 export const getBrands = async (req, res) => {
   try {
-    const brands = await Brand.find();
+    const brands = await Brand.find().populate("platforms.connectionId");
     res.json(brands);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -44,10 +45,11 @@ export const getBrands = async (req, res) => {
 // Update a brand
 export const updateBrand = async (req, res) => {
   try {
-    const { name, description } = req.body;
+    const { name, description, platforms } = req.body;
+
     const updatedBrand = await Brand.findByIdAndUpdate(
       req.params.id,
-      { name, description },
+      { name, description, platforms },
       { new: true }
     );
     res.json(updatedBrand);
@@ -65,3 +67,4 @@ export const deleteBrand = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+

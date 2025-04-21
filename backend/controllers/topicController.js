@@ -1,26 +1,34 @@
 import Topic from "../models/Topic.js";
+import Brand from "../models/Brand.js"; // make sure Brand model is imported
+
 import Connection from "../models/Connection.js";
+
 
 export const createTopic = async (req, res) => {
   try {
     console.log("Received data:", req.body);
 
-    const { title, status, imageUrl, brandId, scheduleTime, platforms } = req.body;
+    const { title, status, imageUrl, brandId, scheduleTime } = req.body;
 
     if (!brandId) {
       return res.status(400).json({ error: "brandId is required" });
     }
 
-    if (!Array.isArray(platforms)) {
-      return res.status(400).json({ error: "Platforms must be an array" });
+    // Get brand from DB
+    const brand = await Brand.findById(brandId);
+    if (!brand) {
+      return res.status(404).json({ error: "Brand not found" });
     }
 
+    // Extract platform names from brand
+    const platformNames = brand.platforms.map((p) => p.platform);
+
+    // Find active connections for each platform
     const platformConnections = [];
 
-    for (const platformName of platforms) {
+    for (const platformName of platformNames) {
       const platformNormalized = platformName.toLowerCase();
 
-      // Remove brandId filter since your connections are shared
       const connection = await Connection.findOne({
         platform: { $regex: new RegExp(`^${platformNormalized}$`, "i") },
         isActive: true,
@@ -28,7 +36,7 @@ export const createTopic = async (req, res) => {
 
       if (connection) {
         platformConnections.push({
-          platform: connection.platform, // Keep it as stored in DB
+          platform: connection.platform,
           connectionId: connection._id,
         });
       } else {
@@ -37,9 +45,10 @@ export const createTopic = async (req, res) => {
     }
 
     if (platformConnections.length === 0) {
-      return res.status(400).json({ error: "No valid active connections found for any selected platforms." });
+      return res.status(400).json({ error: "No valid platform connections found in this brand." });
     }
 
+    // Create new topic
     const newTopic = new Topic({
       title,
       status,
@@ -56,6 +65,7 @@ export const createTopic = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
 
 
 

@@ -11,6 +11,9 @@ const connectionSchema = new mongoose.Schema({
   // WordPress Application Password (for posting to WP/Woo)
   username: { type: String },
   appPassword: { type: String },
+
+  // Optional: Access token for Medium/Shopify (future proof)
+  accessToken: { type: String },
   
   isActive: { type: Boolean, default: true },
   createdAt: { type: Date, default: Date.now },

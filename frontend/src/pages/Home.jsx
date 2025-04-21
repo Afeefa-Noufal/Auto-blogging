@@ -40,6 +40,7 @@ const styles = {
     maxWidth: "600px",
     lineHeight: "1.6",
     marginBottom: "30px",
+    color:"white"
   },
   button: {
     padding: "12px 24px",

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect ,useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Topics.css";
@@ -11,9 +11,10 @@ const Topics = () => {
     title: "",
     status: "active",
     scheduleTime: "",
-    imageUrl: "",
-    platforms: [],
+    imageUrl: ""
   });
+  const fileInputRef = useRef(null);
+
 
   const [imageFile, setImageFile] = useState(null);
   const [imageUrlInput, setImageUrlInput] = useState("");
@@ -105,6 +106,7 @@ const Topics = () => {
       setNewTopic({ title: "", status: "active", scheduleTime: "", platforms: [] });
       setImageFile(null);
       setImageUrlInput("");
+      if (fileInputRef.current) fileInputRef.current.value = "";
       fetchTopics();
     } catch (error) {
       setError(error.response?.data?.error || "Failed to add topic.");
@@ -150,6 +152,7 @@ const Topics = () => {
       setEditingTopic(null);
       setNewTopic({ title: "", status: "active", scheduleTime: "", platforms: [] });
       setImageFile(null);
+      if (fileInputRef.current) fileInputRef.current.value = "";
       setImageUrlInput("");
       fetchTopics();
     } catch (error) {
@@ -166,6 +169,15 @@ const Topics = () => {
       setError("Failed to delete topic.");
     }
   };
+
+  const getTopicStatus = (topic) => {
+    const now = new Date();
+    if (topic.used) return "completed"; // correct field name
+    if (topic.failed) return "failed";
+    if (topic.scheduleTime && new Date(topic.scheduleTime) > now) return "scheduled";
+    return topic.status || "active";
+  };
+  
 
   return (
     <div className="topics-container">
@@ -213,6 +225,7 @@ const Topics = () => {
             type="file"
             accept="image/*"
             onChange={handleImageChange}
+            ref={fileInputRef}
           />
           {(imageUrlInput || imageFile) && (
             <div className="image-preview">
@@ -225,21 +238,6 @@ const Topics = () => {
           )}
         </div>
 
-        <div className="form-section">
-          <select
-            name="platforms"
-            value={(newTopic.platforms && newTopic.platforms[0]) || ""}
-            onChange={(e) =>
-              setNewTopic({ ...newTopic, platforms: [e.target.value] })
-            }
-          >
-            <option value="" disabled hidden>Select a platform topublish</option>
-            <option value="WooCommerce">WooCommerce</option>
-            <option value="Shopify">Shopify</option>
-            <option value="Medium">Medium</option>
-            <option value="WordPress">WordPress</option>
-          </select>
-        </div>
 
         <div className="form-button-section">
           <button type="submit" className="primary-btn">
@@ -268,7 +266,10 @@ const Topics = () => {
             {topics.map((topic) => (
               <tr key={topic._id}>
                 <td>{topic.title}</td>
-                <td>{topic.status}</td>
+                <td><span className={`status-badge ${getTopicStatus(topic)}`}>
+                  {getTopicStatus(topic)}
+                </span></td>
+
                 <td>
                   {topic.scheduleTime
                     ? new Date(topic.scheduleTime).toLocaleString()
@@ -285,11 +286,11 @@ const Topics = () => {
                   {/* {topic.platforms && topic.platforms.length > 0
                     ? topic.platforms.join(", ")
                     : "None"} */}
-              {topic.platforms.map(p => (
-                  <div key={p.connectionId}>
-                    {p.platform}
-                     {/* , Connection ID: {p.connectionId}  */}
-                  </div>
+                  {topic.platforms.map(p => (
+                    <div key={p.connectionId}>
+                      {p.platform}
+                      {/* , Connection ID: {p.connectionId}  */}
+                    </div>
                   ))}
 
                 </td>

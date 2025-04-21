@@ -7,6 +7,8 @@ import blogRoutes from "./routes/blogRoutes.js";
 import topicRoutes from "./routes/topicRoutes.js"; // New route for topics
 import imageRoutes from "./routes/imageRoutes.js"; // Import image routes
 import connectionRoutes from './routes/connectionRoutes.js'
+import scheduleStatusRoutes from "./routes/scheduleStatusRoutes.js";
+
 import "./cron/blogScheduler.js"; // Runs after DB connection
 
 dotenv.config();
@@ -30,6 +32,8 @@ app.use("/api/brands", brandRoutes);
 app.use("/api/blogs", blogRoutes);
 app.use("/api/topics", topicRoutes); // New route for managing topics
 app.use('/api/connections', connectionRoutes);
+app.use("/api/schedule-status", scheduleStatusRoutes);
+
 
 // Connect to MongoDB and start the server
 mongoose

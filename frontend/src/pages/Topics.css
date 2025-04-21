@@ -193,6 +193,18 @@
   }
 }
 
+.status-badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  text-transform: capitalize;
+  font-weight: bold;
+}
+
+.status-badge.active { background-color: #e0f7fa; color: #00796b; }
+.status-badge.scheduled { background-color: #fff3e0; color: #ef6c00; }
+.status-badge.completed { background-color: #e8f5e9; color: #388e3c; }
+.status-badge.failed { background-color: #ffebee; color: #c62828; }
+
 
 
 
