@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import BlogCard from "../components/BlogCard";
-import "./Blogs.css"; // Import CSS file for styling
+import BlogCard from "../../components/BlogCard";
+import "../css/Blogs.css"; 
+import Navbar from "../../components/Navbar";
 
 const Blogs = () => {
   const [blogs, setBlogs] = useState([]);
@@ -29,6 +30,7 @@ const Blogs = () => {
 
   return (
     <div className="blogs-container">
+      <Navbar/>
       <h1>Latest Blogs</h1>
 
       {/* Search Input */}

@@ -2,13 +2,13 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
+import authRoutes from "./routes/auth.js";
 import brandRoutes from "./routes/brandRoutes.js";
 import blogRoutes from "./routes/blogRoutes.js";
 import topicRoutes from "./routes/topicRoutes.js"; // New route for topics
 import imageRoutes from "./routes/imageRoutes.js"; // Import image routes
 import connectionRoutes from './routes/connectionRoutes.js'
 import scheduleStatusRoutes from "./routes/scheduleStatusRoutes.js";
-
 import "./cron/blogScheduler.js"; // Runs after DB connection
 
 dotenv.config();
@@ -16,7 +16,10 @@ dotenv.config();
 const app = express();
 
 // Middleware
-app.use(cors()); // Allow frontend to access backend
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true, 
+}));
 app.use(express.json()); // Parse JSON requests
 app.use(express.urlencoded({ extended: true })); // Parse form data
 
@@ -28,6 +31,7 @@ app.use("/api", imageRoutes);  // Ensure it matches frontend API calls
 
 
 // Routes
+app.use('/api/auth', authRoutes);
 app.use("/api/brands", brandRoutes);
 app.use("/api/blogs", blogRoutes);
 app.use("/api/topics", topicRoutes); // New route for managing topics

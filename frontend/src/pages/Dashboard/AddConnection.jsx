@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import "./AddConnection.css"; // Import the external CSS file
+import "../css/AddConnection.css"; 
+import Navbar from "../../components/Navbar";
+import { toast } from "react-toastify";
 
 const AddConnection = () => {
   const [connections, setConnections] = useState([]);
@@ -12,7 +14,7 @@ const AddConnection = () => {
     consumerKey: "",
     consumerSecret: "",
     isActive: true,
-    brandId: "", // Still needed when adding a connection
+    brandId: "", 
   });
 
   useEffect(() => {
@@ -38,43 +40,6 @@ const AddConnection = () => {
     }
   };
 
-  // Fetch blogs
-  // const fetchBlogs = async () => {
-  //   try {
-  //     console.log("Fetching blogs...");
-  //     const response = await axios.get("http://localhost:5000/api/blogs");
-  //     console.log("Received blogs:", response.data);
-  //     setBlogs(response.data);
-  //     setBlogs(response.data.filter(blog => !blog.isPublished));
-  //   } catch (error) {
-  //     console.error("Error fetching blogs:", error);
-  //   }
-  // };
-
-  // Publish blog
-//  const publishToWooCommerce = async () => {
-//   if (!selectedBlogId) {
-//     alert("Please select a blog to publish.");
-//     return;
-//   }
-
-//   try {
-//     console.log(`Publishing blog ID: ${selectedBlogId}`);
-//     await axios.post(`http://localhost:5000/api/blogs/${selectedBlogId}/publish`);
-//     alert("Blog posted to WooCommerce successfully!");
-//   } catch (error) {
-//     console.error("Error publishing blog:", error);
-
-//     // ✅ Show backend error message in alert if available
-//     if (error.response && error.response.data && error.response.data.message) {
-//       alert(error.response.data.message);
-//     } else if (error.request) {
-//       alert("No response from server. Please check your connection.");
-//     } else {
-//       alert("Failed to post blog to WooCommerce");
-//     }
-//   }
-// };
 
   // Handle form input
   const handleChange = (e) => {
@@ -88,15 +53,16 @@ const AddConnection = () => {
       console.log("Sending request to API...");
       const response = await axios.post("http://localhost:5000/api/connections", formData);
       console.log("✅ Connection added:", response.data);
-      alert("Connection added successfully");
+      toast.success("Connection added successfully");
       fetchConnections();
     } catch (error) {
-      console.error("❌ Error adding connection:", error.response ? error.response.data : error.message);
+      toast.error("❌ Error adding connection:", error.response ? error.response.data : error.message);
     }
   };
 
   return (
     <div className="container">
+      <Navbar/>
       <h2 className="title">Add Connection</h2>
 
       <form onSubmit={handleSubmit} className="form">
@@ -144,28 +110,7 @@ const AddConnection = () => {
       ) : (
         <p className="no-connections">No connections found.</p>
       )}
-{/* 
-      {connections.length > 0 && (
-        <>
-          <h3 className="sub-title">Publish Blog to WooCommerce</h3>
-          <select
-            className="dropdown"
-            value={selectedBlogId}
-            onChange={(e) => setSelectedBlogId(e.target.value)}
-          >
-            <option value="">Select a blog</option>
-            {blogs.map((blog) => (
-              <option key={blog._id} value={blog._id}>
-                {blog.title}
-              </option>
-            ))}
-          </select>
 
-          <button onClick={publishToWooCommerce} className="button">
-            Publish to WooCommerce
-          </button>
-        </>
-      )} */}
     </div>
   );
 };

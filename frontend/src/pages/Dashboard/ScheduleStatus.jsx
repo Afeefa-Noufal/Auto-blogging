@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import './ScheduleStatus.css'
+import '../css/ScheduleStatus.css'
+import Navbar from "../../components/Navbar";
 
 const ScheduleStatus = () => {
   const [topics, setTopics] = useState([]);
@@ -41,6 +42,7 @@ const ScheduleStatus = () => {
 
   return (
     <div className="schedule-status-page">
+      <Navbar/>
       <h2>Schedule Status</h2>
 
       {/* Search Bar */}

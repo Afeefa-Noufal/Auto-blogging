@@ -1,7 +1,9 @@
 import { useState, useEffect ,useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import "./Topics.css";
+import "../css/Topics.css";
+import Navbar from "../../components/Navbar";
+import { toast} from 'react-toastify';
 
 const Topics = () => {
   const { brandId } = useParams();
@@ -98,9 +100,10 @@ const Topics = () => {
         imageUrl,
         brandId,
       });
-
+      toast.success("Topic added successfully!");
       // ✅ Redirect here after success
       navigate(`/brands/${brandId}`);
+      
 
       // (optional) reset form and state
       setNewTopic({ title: "", status: "active", scheduleTime: "", platforms: [] });
@@ -181,6 +184,7 @@ const Topics = () => {
 
   return (
     <div className="topics-container">
+      <Navbar/>
       <h2>{brand ? `${brand.name} - Topics` : "Loading..."}</h2>
       <p>{brand?.description}</p>
 

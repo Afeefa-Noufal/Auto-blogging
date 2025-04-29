@@ -1,0 +1,91 @@
+/* Auth Container Styling */
+.auth-container {
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 2rem;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Header Styling */
+.auth-container h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+/* Form Styling */
+.auth-container form {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Input Field Styling */
+.auth-container input {
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+/* Button Styling */
+.auth-container button {
+  padding: 10px;
+  background-color: #2dadd4;
+  color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s;
+}
+
+.auth-container button:hover {
+  background-color: #45a049;
+}
+
+/* Link Button Styling */
+.auth-container .link-button {
+  background: none;
+  color: #007bff;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 10px;
+  padding: 0;
+  border: none;
+}
+
+.auth-container .link-button:hover {
+  color: #0056b3;
+}
+
+/* Error Message Styling */
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+/* Additional Styling for Links inside the Form */
+.auth-container .auth-form a {
+  display: inline-block;
+  margin-top: 15px;
+  text-align: center;
+  color: #007bff;
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.auth-container .auth-form a:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
+.small-text {
+  font-size: 12px;
+}
+
+

@@ -1,8 +1,11 @@
 import { Link } from "react-router-dom";
+import Navbar from "../../components/Navbar";
 
 const Home = () => {
   return (
+   
     <div style={styles.container}>
+       <Navbar/>
       <h1 style={styles.heading}>Welcome to AutoBlog</h1>
       <p style={styles.description}>
         Automatically generated blogs using AI. Stay updated with fresh content daily!

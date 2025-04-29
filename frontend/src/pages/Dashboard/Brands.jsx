@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import "./Brands.css";
+import "../css/Brands.css";
+import Navbar from "../../components/Navbar";
+import { toast } from 'react-toastify'; // ✅ Only import toast (ToastContainer is already global)
 
 const platformOptions = ["WooCommerce", "Shopify", "Medium", "WordPress"];
 
@@ -43,15 +45,16 @@ const Brands = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Use the platforms array from newBrand
       const brandData = { ...newBrand };
 
       if (editingBrand) {
         // Update Brand
         await axios.put(`http://localhost:5000/api/brands/${editingBrand._id}`, brandData);
+        toast.success("Brand updated successfully!"); 
       } else {
         // Create New Brand
         await axios.post("http://localhost:5000/api/brands", brandData);
+        toast.success("Brand added successfully!"); 
       }
 
       fetchBrands();
@@ -59,6 +62,7 @@ const Brands = () => {
       setEditingBrand(null);
     } catch (error) {
       console.error("Error saving brand:", error.response ? error.response.data : error.message);
+      toast.error("Failed to save brand!"); 
     }
   };
 
@@ -76,14 +80,17 @@ const Brands = () => {
       try {
         await axios.delete(`http://localhost:5000/api/brands/${id}`);
         fetchBrands();
+        toast.success("Brand deleted successfully!"); // ✅ Toast on delete success
       } catch (error) {
         console.error("Error deleting brand:", error);
+        toast.error("Failed to delete brand!"); // ✅ Toast on delete error
       }
     }
   };
 
   return (
     <div className="brands-container">
+      <Navbar />
       <h2>Manage Brands</h2>
 
       <form onSubmit={handleSubmit} className="brand-form">
@@ -136,7 +143,7 @@ const Brands = () => {
               <th>#</th>
               <th>Brand Name</th>
               <th>Description</th>
-              <th>Platforms</th> {/* New column for platforms */}
+              <th>Platforms</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -147,9 +154,10 @@ const Brands = () => {
                 <td>{brand.name}</td>
                 <td>{brand.description}</td>
                 <td>
-                  {/* Display platforms for each brand */}
                   {brand.platforms.map((platform, idx) => (
-                    <span key={idx}>{platform.platform}{idx < brand.platforms.length - 1 ? ', ' : ''}</span>
+                    <span key={idx}>
+                      {platform.platform}{idx < brand.platforms.length - 1 ? ', ' : ''}
+                    </span>
                   ))}
                 </td>
                 <td>
@@ -167,6 +175,7 @@ const Brands = () => {
 };
 
 export default Brands;
+
 
 
 

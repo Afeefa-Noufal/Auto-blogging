@@ -23,10 +23,12 @@
   color: whitesmoke;
 }
 
-/* Navigation Links */
+/* Navigation Links container */
 .nav-links {
   display: flex;
   gap: 25px; /* More spacing for better look */
+  justify-content: center; /* Center the links */
+  flex-grow: 1; /* Allow nav-links to grow and push logout to the right */
 }
 
 /* Each link button */
@@ -52,6 +54,25 @@
   transform: scale(1.05);
 }
 
+.logout-button {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: 50px; 
+  font-size: 14px;
+  transition: background-color 0.3s;
+  align-self: flex-end; 
+  
+}
+
+/* Logout hover effect */
+.logout-button:hover {
+  background-color: #c0392b;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .navbar {
@@ -71,6 +92,14 @@
     width: 100%;
     text-align: center;
   }
+
+  /* On mobile: logout button should still be at the right end */
+  .logout-button {
+    margin-top: 10px;
+    align-self: flex-end; /* Keep it aligned to the end on mobile */
+  }
 }
+
+
 
 
