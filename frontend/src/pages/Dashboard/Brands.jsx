@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import "../css/Brands.css";
 import Navbar from "../../components/Navbar";
-import { toast } from 'react-toastify'; // ✅ Only import toast (ToastContainer is already global)
+import { toast } from 'react-toastify';
 
 const platformOptions = ["WooCommerce", "Shopify", "Medium", "WordPress"];
 
@@ -11,9 +11,12 @@ const Brands = () => {
   const [brands, setBrands] = useState([]);
   const [newBrand, setNewBrand] = useState({ name: "", description: "", platforms: [] });
   const [editingBrand, setEditingBrand] = useState(null);
+  const [connections, setConnections] = useState([]);
+
 
   useEffect(() => {
     fetchBrands();
+    fetchConnections();
   }, []);
 
   const fetchBrands = async () => {
@@ -25,22 +28,29 @@ const Brands = () => {
     }
   };
 
+
+  const fetchConnections = async () => {
+    try {
+      const res = await axios.get("http://localhost:5000/api/connections");
+      setConnections(res.data);
+    } catch (error) {
+      console.error("Failed to fetch connections:", error);
+    }
+  };
+
+
   const handleChange = (e) => {
     setNewBrand({ ...newBrand, [e.target.name]: e.target.value });
   };
 
-  const handlePlatformToggle = (platform) => {
-    const existing = newBrand.platforms.find(p => p.platform === platform);
-
-    let updatedPlatforms;
-    if (existing) {
-      updatedPlatforms = newBrand.platforms.filter(p => p.platform !== platform);
-    } else {
-      updatedPlatforms = [...newBrand.platforms, { platform }];
+  const handlePlatformConnectionChange = (platform, connectionId) => {
+    const updatedPlatforms = newBrand.platforms.filter(p => p.platform !== platform);
+    if (connectionId) {
+      updatedPlatforms.push({ platform, connectionId });
     }
-
     setNewBrand({ ...newBrand, platforms: updatedPlatforms });
   };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -50,11 +60,11 @@ const Brands = () => {
       if (editingBrand) {
         // Update Brand
         await axios.put(`http://localhost:5000/api/brands/${editingBrand._id}`, brandData);
-        toast.success("Brand updated successfully!"); 
+        toast.success("Brand updated successfully!");
       } else {
         // Create New Brand
         await axios.post("http://localhost:5000/api/brands", brandData);
-        toast.success("Brand added successfully!"); 
+        toast.success("Brand added successfully!");
       }
 
       fetchBrands();
@@ -62,7 +72,7 @@ const Brands = () => {
       setEditingBrand(null);
     } catch (error) {
       console.error("Error saving brand:", error.response ? error.response.data : error.message);
-      toast.error("Failed to save brand!"); 
+      toast.error("Failed to save brand!");
     }
   };
 
@@ -94,34 +104,50 @@ const Brands = () => {
       <h2>Manage Brands</h2>
 
       <form onSubmit={handleSubmit} className="brand-form">
-        <input
-          type="text"
-          name="name"
-          placeholder="Brand Name"
-          value={newBrand.name}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="text"
-          name="description"
-          placeholder="Description"
-          value={newBrand.description}
-          onChange={handleChange}
-        />
+        
+        <div className="form-group">
+          <input
+            type="text"
+            name="name"
+            placeholder="Brand Name"
+            value={newBrand.name}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <input
+            type="text"
+            name="description"
+            placeholder="Description"
+            value={newBrand.description}
+            onChange={handleChange}
+          />
+        </div>
 
         <div className="platforms-selection">
           <label>Select Platforms:</label>
           <div className="checkbox-group">
             {platformOptions.map((platform) => (
-              <label key={platform} className="checkbox-item">
-                <input
-                  type="checkbox"
-                  checked={newBrand.platforms.some(p => p.platform === platform)}
-                  onChange={() => handlePlatformToggle(platform)}
-                />
-                {platform}
-              </label>
+              <div key={platform} className="connection-selection">
+                <label>{platform}</label>
+                <select
+                  value={
+                    newBrand.platforms.find(p => p.platform === platform)?.connectionId || ""
+                  }
+                  onChange={(e) => handlePlatformConnectionChange(platform, e.target.value)}
+                >
+                  <option value="">Select Connection</option>
+                  {connections
+                    .filter(conn => conn.platform === platform)
+                    .map(conn => (
+                      <option key={conn._id} value={conn._id}>
+                        {conn.siteUrl}
+                      </option>
+                    ))}
+                </select>
+              </div>
             ))}
           </div>
         </div>
@@ -133,6 +159,7 @@ const Brands = () => {
           </button>
         )}
       </form>
+
 
       {brands.length === 0 ? (
         <p className="no-brands">No brands available.</p>
@@ -154,12 +181,37 @@ const Brands = () => {
                 <td>{brand.name}</td>
                 <td>{brand.description}</td>
                 <td>
-                  {brand.platforms.map((platform, idx) => (
-                    <span key={idx}>
-                      {platform.platform}{idx < brand.platforms.length - 1 ? ', ' : ''}
-                    </span>
-                  ))}
+                  {brand.platforms.map((platform, idx) => {
+                    console.log("Platform: ", platform); // Log the platform data
+                    console.log("Available connections: ", connections); // Log all available connections
+
+                    // Log connectionId to verify it's set correctly
+                    console.log("Connection ID for this platform: ", platform.connectionId);
+
+                    // Ensure connectionId is an actual string and not an object
+                    const connectionId = platform.connectionId ? platform.connectionId._id || platform.connectionId : null;
+
+                    if (!connectionId) {
+                      console.log("No connectionId for platform", platform.platform);
+                    }
+
+                    const conn = connections.find(c => {
+                      console.log("Checking connection: ", c); // Log each connection
+                      return c._id && connectionId && c._id.toString() === connectionId.toString();
+                    });
+
+                    console.log("Found connection: ", conn); // Log the found connection (or undefined)
+
+                    return (
+                      <span key={idx}>
+                        {platform.platform}: {conn ? conn.siteUrl : 'No connection'}
+                        {idx < brand.platforms.length - 1 ? ', ' : ''}
+                      </span>
+                    );
+                  })}
                 </td>
+
+
                 <td>
                   <Link to={`/brands/${brand._id}`} className="view-topics">View Topics</Link>
                   <button onClick={() => handleEdit(brand)} className="edit-btn">Edit</button>

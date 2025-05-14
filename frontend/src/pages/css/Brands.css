@@ -1,108 +1,93 @@
-.brands-container {
-  width: 80%;
-  margin: auto;
-  text-align: center;
-}
-
 .brand-form {
   display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 20px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 15px;
+  background-color: #ffffff;
+  padding: 25px 30px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 700px;
+  margin: 20px auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .brand-form input {
-  padding: 8px;
+  width: 100%;
+  padding: 10px;
+  font-size: 15px;
   border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.platforms-selection {
+  width: 100%;
+}
+
+.platforms-selection label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 5px;
+}
+
+.connection-selection {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.connection-selection label {
+  min-width: 100px;
+  font-weight: 500;
+}
+
+.connection-selection select {
+  flex: 1;
+  padding: 8px;
   border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 14px;
 }
 
 .brand-form button {
+  align-self: flex-start;
   background-color: #007bff;
   color: white;
-  padding: 8px 12px;
+  padding: 10px 16px;
   border: none;
-  border-radius: 5px;
+  border-radius: 6px;
   cursor: pointer;
+  font-size: 15px;
 }
 
-/* Table Styling */
-.brands-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
+.brand-form button:hover {
+  background-color: #0056b3;
 }
 
-.brands-table th, .brands-table td {
-  border: 1px solid #ddd;
-  padding: 10px;
-  text-align: center;
-}
-
-.brands-table th {
-  background-color: #f4f4f4;
-  font-weight: bold;
-}
-
-/* Action Buttons */
-.edit-btn, .delete-btn, .view-topics {
-  padding: 6px 12px;
-  border-radius: 5px;
-  font-size: 14px;
-  cursor: pointer;
-  margin-right: 5px;
-  transition: all 0.3s ease-in-out;
-}
-
-/* Edit Button */
-.edit-btn {
-  background-color: #3498db;
-  color: white;
-  border: none;
-}
-
-.edit-btn:hover {
-  background-color: #2980b9;
-}
-
-/* Delete Button */
-.delete-btn {
-  background-color: #e74c3c;
-  color: white;
-  border: none;
-}
-
-.delete-btn:hover {
-  background-color: #c0392b;
-}
-
-/* View Topics Button */
-.view-topics {
-  background-color: #2ecc71;
-  color: white;
-  text-decoration: none;
-  display: inline-block;
-  padding: 6px 12px;
-}
-
-.view-topics:hover {
-  background-color: #27ae60;
-}
-
-/* Cancel Edit Button */
 .cancel-edit {
-  background-color: #95a5a6;
+  background-color: #6c757d;
   color: white;
-  border: none;
-  padding: 6px 12px;
+  padding: 10px 16px;
   margin-left: 10px;
-  border-radius: 5px;
+  border: none;
+  border-radius: 6px;
+  font-size: 15px;
   cursor: pointer;
 }
 
 .cancel-edit:hover {
-  background-color: #7f8c8d;
+  background-color: #5a6268;
 }
 
 
-  
+
+   

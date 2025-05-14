@@ -5,7 +5,7 @@ const BrandSchema = new mongoose.Schema({
   description: { type: String},
   platforms: [{
     platform: { type: String, enum: ["WooCommerce", "Shopify", "Medium", "WordPress"], required: true },
-    connectionId: { type: mongoose.Schema.Types.ObjectId, ref: "Connection", required: false }, // Optional, can be filled later
+    connectionId: { type: mongoose.Schema.Types.ObjectId, ref: "Connection", required: true }, 
   }],
   createdAt: { type: Date, default: Date.now }
 });

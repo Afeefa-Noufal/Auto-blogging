@@ -1,5 +1,3 @@
-import React, { useEffect, useState } from "react"; 
-import axios from "axios";
 import Topic from "../models/Topic.js";
 import Blog from "../models/Blog.js";
 

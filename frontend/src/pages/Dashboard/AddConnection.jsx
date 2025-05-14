@@ -1,30 +1,28 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import "../css/AddConnection.css"; 
+import "../css/AddConnection.css";
 import Navbar from "../../components/Navbar";
 import { toast } from "react-toastify";
 
 const AddConnection = () => {
   const [connections, setConnections] = useState([]);
-  const [blogs, setBlogs] = useState([]);
-  const [selectedBlogId, setSelectedBlogId] = useState("");
   const [formData, setFormData] = useState({
     platform: "WooCommerce",
     siteUrl: "",
     consumerKey: "",
     consumerSecret: "",
+    username: "",
+    appPassword: "",
     isActive: true,
-    brandId: "", 
+    brandId: "",
   });
 
   useEffect(() => {
     const brandId = localStorage.getItem("brandId");
     setFormData((prev) => ({ ...prev, brandId }));
     fetchConnections();
-    // fetchBlogs();
   }, []);
 
-  // Fetch WooCommerce connections
   const fetchConnections = async () => {
     try {
       console.log("Fetching connections...");
@@ -40,13 +38,10 @@ const AddConnection = () => {
     }
   };
 
-
-  // Handle form input
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Submit new connection
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -56,13 +51,14 @@ const AddConnection = () => {
       toast.success("Connection added successfully");
       fetchConnections();
     } catch (error) {
-      toast.error("❌ Error adding connection:", error.response ? error.response.data : error.message);
+      console.error("❌ Error adding connection:", error);
+      toast.error(error.response?.data?.message || "Error adding connection");
     }
   };
 
   return (
     <div className="container">
-      <Navbar/>
+      <Navbar />
       <h2 className="title">Add Connection</h2>
 
       <form onSubmit={handleSubmit} className="form">
@@ -90,6 +86,22 @@ const AddConnection = () => {
           onChange={handleChange}
           required
         />
+        <input
+          type="text"
+          name="username"
+          placeholder="Username"
+          className="input"
+          onChange={handleChange}
+          required
+        />
+        <input
+          type="text"
+          name="appPassword"
+          placeholder="App Password"
+          className="input"
+          onChange={handleChange}
+          required
+        />
         <button type="submit" className="button">Add Connection</button>
       </form>
 
@@ -99,7 +111,8 @@ const AddConnection = () => {
           {connections.map((conn) => (
             <li key={conn._id} className="connection-item">
               <div>
-                <span className="platform">{conn.platform}</span> - <span className="site-url">{conn.siteUrl}</span>
+                <span className="platform">{conn.platform}</span> -{" "}
+                <span className="site-url">{conn.siteUrl}</span>
               </div>
               <span className={`status ${conn.isActive ? "active" : "inactive"}`}>
                 {conn.isActive ? "Active" : "Inactive"}
@@ -110,11 +123,8 @@ const AddConnection = () => {
       ) : (
         <p className="no-connections">No connections found.</p>
       )}
-
     </div>
   );
 };
 
 export default AddConnection;
-
-

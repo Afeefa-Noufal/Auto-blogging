@@ -139,7 +139,7 @@ export const publishBlog = async (req, res) => {
 
     // ✅ Update blog status
     blog.isPublished = true;
-    blog.publishedAt = new Date(); // 📅 Optional
+    blog.publishedAt = new Date(); 
     await blog.save();
 
     console.log(`✅ Blog "${blog.title}" published successfully`);

@@ -5,7 +5,7 @@ export const addConnection = async (req, res) => {
   try {
     console.log("🔹 Incoming request:", req.body);
 
-    const { platform, siteUrl, consumerKey, consumerSecret, isActive } = req.body;
+    const { platform, siteUrl, consumerKey, consumerSecret,username, appPassword, isActive } = req.body;
 
     if (!siteUrl || !consumerKey || !consumerSecret) {
       return res.status(400).json({ error: "Missing required fields" });
@@ -16,6 +16,8 @@ export const addConnection = async (req, res) => {
       siteUrl,
       consumerKey,
       consumerSecret,
+      username,
+      appPassword,
       isActive,
     });
 
